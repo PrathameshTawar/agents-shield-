@@ -60,7 +60,7 @@
 
       // Grid
       ctx.lineWidth = 1;
-      ctx.strokeStyle = isDark ? "rgba(192, 132, 252, 0.05)" : "rgba(124, 58, 237, 0.05)";
+      ctx.strokeStyle = isDark ? "rgba(163, 230, 53, 0.08)" : "rgba(16, 185, 129, 0.08)";
       ctx.beginPath();
       for (let x = 0; x <= width; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, height); }
       for (let y = 0; y <= height; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(width, y); }
@@ -70,7 +70,7 @@
       particles.forEach((p) => {
         p.y += p.speed;
         if (p.y > height) { p.y = 0; p.x = Math.floor(Math.random() * (width / gridSize)) * gridSize; }
-        ctx.fillStyle = isDark ? "rgba(192, 132, 252, 0.8)" : "rgba(124, 58, 237, 0.7)";
+        ctx.fillStyle = isDark ? "rgba(163, 230, 53, 0.85)" : "rgba(16, 185, 129, 0.75)";
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -134,12 +134,13 @@
         verdict.detected_entities.forEach((e) => appendLog(`  • Entity Type: ${e}`, "warn"));
         appendLog(`\n[Sanitized Output (Safe for LLM)]:`, "step");
         appendLog(`"${verdict.sanitized_text}"`, "success");
-        statusBeacon.style.background = "#ffbd2e";
+        statusBeacon.style.background = "#F59E0B";
         liveStatusText.textContent = "PII REDACTED";
       } else {
         appendLog(`✓ Input Verified: No injection patterns or PII detected.`, "success");
         appendLog(`Safe Output: "${verdict.sanitized_text}"`, "info");
-        statusBeacon.style.background = "#27c93f";
+        statusBeacon.style.background = "#10B981";
+        statusBeacon.style.boxShadow = "0 0 10px #10B981";
         liveStatusText.textContent = "PERIMETER SECURE";
       }
     } catch (err) {
