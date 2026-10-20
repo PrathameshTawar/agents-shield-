@@ -1,6 +1,9 @@
 """FastAPI security gateway exposing guardrails, tool authorization, output filtering, and red-team benchmarks."""
 
+from pathlib import Path
 from fastapi import FastAPI, status
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from shield import __version__
 from shield.api.schemas import (
     AuthorizeToolRequest,
@@ -23,6 +26,20 @@ app = FastAPI(
     version=__version__,
     description="Evaluated AI Guardrails, Prompt-Injection Defense, Tool Authorization, and Red-Team Platform",
 )
+
+# Static files for Apple HIG frontend
+STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+
+@app.get("/", tags=["UI"], include_in_schema=False)
+def serve_ui():
+    """Serves Apple HIG frontend interface."""
+    index_file = STATIC_DIR / "index.html"
+    if index_file.exists():
+        return FileResponse(str(index_file))
+    return {"message": "AgentShield API active. Static UI not built."}
 
 # Core guard instances
 injection_guard = InjectionGuard()
