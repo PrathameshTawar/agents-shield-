@@ -63,7 +63,10 @@ class OutputValidator:
                     reason=f"Output failed structured schema validation: {str(err)}",
                 )
 
-        has_critical_leaks = any("Canary" in leak or "Exfiltration" in leak for leak in leaks_found)
+        has_critical_leaks = any(
+            "canary" in leak.lower() or "exfiltration" in leak.lower()
+            for leak in leaks_found
+        )
         decision = ActionDecision.BLOCK if has_critical_leaks else (
             ActionDecision.REDACT if leaks_found else ActionDecision.ALLOW
         )
