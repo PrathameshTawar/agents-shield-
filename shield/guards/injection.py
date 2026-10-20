@@ -19,7 +19,7 @@ class InjectionGuard:
         ),
         (
             re.compile(
-                r"(?:reveal|print|display|output|show|dump)\s+(?:your\s+)?(?:system\s+prompt|initial\s+prompt|secret\s+instructions|hidden\s+rules)",
+                r"(?:reveal|print|display|output|show|dump)\s+(?:your\s+)?(?:initial\s+|underlying\s+|hidden\s+)?(?:system\s+prompt|prompt|secret\s+instructions|hidden\s+rules)",
                 re.IGNORECASE,
             ),
             "System prompt extraction attempt",
@@ -71,7 +71,6 @@ class InjectionGuard:
         max_score = 0.0
 
         patterns = self.INDIRECT_INJECTION_PATTERNS if is_retrieved_document else self.DIRECT_INJECTION_PATTERNS
-        # Also check direct injection patterns on documents in case of overt embedded attacks
         all_checks = patterns + (self.DIRECT_INJECTION_PATTERNS if is_retrieved_document else [])
 
         for pattern, reason, score in all_checks:
