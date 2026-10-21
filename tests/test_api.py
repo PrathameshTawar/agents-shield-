@@ -13,6 +13,7 @@ def test_health_check():
     data = res.json()
     assert data["status"] == "healthy"
     assert data["service"] == "AgentShield"
+    assert "features" in data
 
 
 def test_evaluate_input_blocks_prompt_injection():
@@ -32,7 +33,7 @@ def test_evaluate_input_blocks_prompt_injection():
 
 def test_evaluate_input_redacts_pii():
     payload = {
-        "text": "Contact user at john.doe@example.com or 555-123-4567 for support.",
+        "text": "Contact user at john.doe@example.com or (555) 123-4567 for support.",
         "is_retrieved_document": False,
         "redact_pii": True,
     }
@@ -89,6 +90,44 @@ def test_authorize_tool_endpoint():
     res = client.post("/guardrails/authorize-tool", json=risky_payload)
     assert res.status_code == 200
     assert res.json()["requires_human_approval"] is True
+    assert res.json()["approval_id"] is not None
+
+
+def test_api_approval_endpoints_flow():
+    # 1. Trigger require_approval
+    res1 = client.post(
+        "/guardrails/authorize-tool",
+        json={"user_role": "admin", "tool_name": "delete_resource", "tenant_id": "acme"},
+    )
+    approval_id = res1.json()["approval_id"]
+    assert approval_id is not None
+
+    # 2. Check approval status
+    res_status = client.get(f"/guardrails/approvals/{approval_id}")
+    assert res_status.status_code == 200
+    assert res_status.json()["status"] == "pending"
+
+    # 3. Approve via endpoint
+    approve_res = client.post(
+        f"/guardrails/approvals/{approval_id}/approve",
+        json={"reason": "Approved by SecOps lead"},
+    )
+    assert approve_res.status_code == 200
+    approval_token = approve_res.json()["approval_token"]
+    assert approval_token is not None
+
+    # 4. Authorize using token
+    res_token = client.post(
+        "/guardrails/authorize-tool",
+        json={
+            "user_role": "admin",
+            "tool_name": "delete_resource",
+            "tenant_id": "acme",
+            "approval_token": approval_token,
+        },
+    )
+    assert res_token.status_code == 200
+    assert res_token.json()["allowed"] is True
 
 
 def test_validate_output_endpoint():
@@ -102,6 +141,27 @@ def test_validate_output_endpoint():
     assert data["passed"] is False
     assert data["decision"] == "block"
     assert "CANARY_SECRET_ALPHA_772" not in data["sanitized_output"]
+
+
+def test_validate_output_with_schema_validation():
+    # Valid schema payload
+    valid_payload = {
+        "output_text": '{"summary": "Clean financial audit", "status": "approved"}',
+        "expected_schema": {"required": ["summary", "status"]},
+    }
+    res = client.post("/guardrails/validate-output", json=valid_payload)
+    assert res.status_code == 200
+    assert res.json()["passed"] is True
+
+    # Invalid schema payload
+    invalid_payload = {
+        "output_text": '{"summary": "Missing status"}',
+        "expected_schema": {"required": ["summary", "status"]},
+    }
+    res = client.post("/guardrails/validate-output", json=invalid_payload)
+    assert res.status_code == 200
+    assert res.json()["passed"] is False
+    assert "schema validation" in res.json()["reason"].lower()
 
 
 def test_run_evaluations_endpoint():

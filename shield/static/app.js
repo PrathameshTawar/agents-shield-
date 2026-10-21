@@ -2,12 +2,31 @@
  * AgentShield — Apple HIG Frontend Controller
  * Connects to AgentShield FastAPI Endpoints:
  * - /guardrails/evaluate-input
- * - /tools/authorize
+ * - /guardrails/authorize-tool
+ * - /guardrails/validate-output
  * - /evaluations/run
  */
 
 (function () {
   "use strict";
+
+  // Safe localStorage helper to avoid crashes when third-party cookies or storage is disabled
+  function safeGetStorage(key, fallback) {
+    try {
+      const val = localStorage.getItem(key);
+      return val !== null ? val : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function safeSetStorage(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      // Storage access disabled or quota exceeded
+    }
+  }
 
   // 1. Theme Controller
   const themeToggleBtn = document.getElementById("themeToggleBtn");
@@ -16,14 +35,14 @@
 
   function applyTheme(theme) {
     htmlRoot.setAttribute("data-theme", theme);
-    localStorage.setItem("agentshield-theme", theme);
+    safeSetStorage("agentshield-theme", theme);
     if (themeToggleIcon) {
       themeToggleIcon.textContent = theme === "dark" ? "☀️" : "🌙";
     }
   }
 
-  const savedTheme = localStorage.getItem("agentshield-theme") ||
-    (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const defaultTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  const savedTheme = safeGetStorage("agentshield-theme", defaultTheme);
   applyTheme(savedTheme);
 
   if (themeToggleBtn) {

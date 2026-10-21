@@ -22,6 +22,15 @@ class ActionDecision(str, Enum):
     REQUIRE_APPROVAL = "require_approval"
 
 
+class UserIdentity(BaseModel):
+    """Server-verified identity of the caller."""
+
+    user_id: str = "anonymous"
+    user_role: str = "read_only"
+    tenant_id: str = "default_tenant"
+    is_authenticated: bool = False
+
+
 class InputEvaluation(BaseModel):
     """Result of evaluating incoming user requests or untrusted retrieved documents."""
 
@@ -44,6 +53,7 @@ class ToolCallRequest(BaseModel):
     tenant_id: str = "default_tenant"
     tool_name: str
     arguments: Dict[str, Any] = Field(default_factory=dict)
+    approval_token: Optional[str] = Field(default=None, description="One-time signed human approval token")
 
 
 class ToolAuthDecision(BaseModel):
@@ -52,9 +62,25 @@ class ToolAuthDecision(BaseModel):
     allowed: bool
     decision: ActionDecision
     requires_human_approval: bool = False
+    approval_id: Optional[str] = Field(default=None, description="Pending approval ID if human review is required")
     reason: str
     tool_name: str
     checked_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class PendingApproval(BaseModel):
+    """Record of an action queued for human reviewer authorization."""
+
+    approval_id: str = Field(default_factory=lambda: str(uuid4()))
+    tool_name: str
+    user_id: str
+    user_role: str
+    tenant_id: str
+    arguments: Dict[str, Any] = Field(default_factory=dict)
+    status: str = "pending"  # pending, approved, rejected, used, expired
+    approval_token: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    expires_at: datetime = Field(...)
 
 
 class OutputValidationResult(BaseModel):
