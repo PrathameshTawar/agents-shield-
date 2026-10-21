@@ -1,7 +1,7 @@
 """High-precision PII, secret, and sensitive data detection, checksum validation, and tokenization engine."""
 
 import re
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 # Verhoeff tables for Aadhaar checksum validation
 VERHOEFF_D = [
