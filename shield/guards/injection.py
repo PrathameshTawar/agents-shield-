@@ -4,7 +4,8 @@ import base64
 import binascii
 import re
 import unicodedata
-from typing import Dict, List, Optional, Set, Tuple
+from typing import List, Optional, Tuple
+
 from shield.core.config import settings
 from shield.core.models import SecurityRiskLevel
 

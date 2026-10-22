@@ -7,8 +7,8 @@
 6. PII checksums (Luhn, Verhoeff), version/order ID false positive prevention, and left-to-right tokenization
 """
 
-import pytest
 from fastapi.testclient import TestClient
+
 from shield.api.main import app
 from shield.core.auth import approval_store
 from shield.core.models import ActionDecision, SecurityRiskLevel, ToolCallRequest, UserIdentity

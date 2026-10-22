@@ -3,8 +3,10 @@
 import argparse
 import sys
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
+
 from shield.core.models import ActionDecision, ToolCallRequest
 from shield.guards.injection import InjectionGuard
 from shield.guards.output_validator import OutputValidator
@@ -330,7 +332,6 @@ class RedTeamEvaluator:
         for case in self.BENCHMARK_CASES:
             case_id = case["id"]
             category = case["category"]
-            is_attack = case.get("is_attack", False)
 
             if category not in cat_stats:
                 cat_stats[category] = {"total": 0, "passed": 0, "failed": 0}

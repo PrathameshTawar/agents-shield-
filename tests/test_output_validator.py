@@ -1,7 +1,7 @@
 """Unit tests for OutputValidator: canary secret leak detection, markdown exfiltration, and schema enforcement."""
 
-import pytest
 from pydantic import BaseModel
+
 from shield.core.models import ActionDecision
 from shield.guards.output_validator import OutputValidator
 

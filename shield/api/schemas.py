@@ -1,7 +1,9 @@
 """Pydantic request and response schemas for AgentShield REST security gateway."""
 
 from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
+
 from shield.evaluator.red_team import SecurityScorecard
 
 

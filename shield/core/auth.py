@@ -6,8 +6,10 @@ import secrets
 import threading
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional, Tuple
+
 from fastapi import Header, HTTPException, Security, status
 from fastapi.security import APIKeyHeader
+
 from shield.core.config import settings
 from shield.core.models import PendingApproval, ToolCallRequest, UserIdentity
 

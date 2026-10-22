@@ -1,10 +1,11 @@
 """FastAPI security gateway exposing guardrails, tool authorization, output filtering, approval workflow, and red-team benchmarks."""
 
 from pathlib import Path
-from typing import Optional
+
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+
 from shield import __version__
 from shield.api.schemas import (
     ApproveToolRequest,

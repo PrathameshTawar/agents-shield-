@@ -1,7 +1,7 @@
 """Integration tests for AgentShield FastAPI security gateway endpoints."""
 
-import pytest
 from fastapi.testclient import TestClient
+
 from shield.api.main import app
 
 client = TestClient(app)

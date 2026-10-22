@@ -1,6 +1,5 @@
 """Unit tests for PIIRedactor: scanning, redaction, and tokenization."""
 
-import pytest
 from shield.guards.pii import PIIRedactor
 
 

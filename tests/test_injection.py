@@ -1,6 +1,5 @@
 """Unit tests for InjectionGuard: direct, indirect injection, and untrusted document isolation."""
 
-import pytest
 from shield.core.models import SecurityRiskLevel
 from shield.guards.injection import InjectionGuard
 
