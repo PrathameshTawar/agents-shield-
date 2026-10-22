@@ -1,6 +1,5 @@
 """Unit tests for PIIRedactor: scanning, redaction, and tokenization."""
 
-import pytest
 from shield.guards.pii import PIIRedactor
 
 
@@ -28,7 +27,9 @@ def test_redact_phones():
 
 def test_redact_api_keys():
     redactor = PIIRedactor()
-    text = "Set OPENAI_API_KEY=sk-abcdef1234567890abcdef123456 and GITHUB_TOKEN=ghp_0123456789abcdefghijklmnopqrstuvwxyz"
+    text = (
+        "Set OPENAI_API_KEY=sk-abcdef1234567890abcdef123456 and GITHUB_TOKEN=ghp_0123456789abcdefghijklmnopqrstuvwxyz"
+    )
     redacted, types = redactor.redact(text)
 
     assert "[API_KEY_REDACTED]" in redacted

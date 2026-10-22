@@ -1,7 +1,9 @@
 """Pydantic request and response schemas for AgentShield REST security gateway."""
 
 from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
+
 from shield.evaluator.red_team import SecurityScorecard
 
 
@@ -29,8 +31,12 @@ class AuthorizeToolRequest(BaseModel):
     """Payload to authorize an agent's proposed tool invocation before execution."""
 
     user_id: Optional[str] = Field(default=None, description="Optional caller user ID")
-    user_role: Optional[str] = Field(default=None, description="Caller role; overridden by verified API key when provided")
-    tenant_id: Optional[str] = Field(default=None, description="Caller tenant; overridden by verified API key when provided")
+    user_role: Optional[str] = Field(
+        default=None, description="Caller role; overridden by verified API key when provided"
+    )
+    tenant_id: Optional[str] = Field(
+        default=None, description="Caller tenant; overridden by verified API key when provided"
+    )
     tool_name: str = Field(...)
     arguments: Dict[str, Any] = Field(default_factory=dict)
     approval_token: Optional[str] = Field(default=None, description="Single-use human review approval token")
@@ -77,7 +83,9 @@ class ValidateOutputRequest(BaseModel):
 
     output_text: str = Field(..., max_length=50_000, description="Generated text to validate")
     canary_secrets: Optional[List[str]] = Field(default=None, description="Protected internal canary tokens")
-    expected_schema: Optional[Dict[str, Any]] = Field(default=None, description="Optional expected JSON schema structure")
+    expected_schema: Optional[Dict[str, Any]] = Field(
+        default=None, description="Optional expected JSON schema structure"
+    )
 
 
 class ValidateOutputResponse(BaseModel):

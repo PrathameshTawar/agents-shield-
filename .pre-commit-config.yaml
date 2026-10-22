@@ -1,0 +1,11 @@
+# Run `pre-commit install` once to enable these hooks on every commit.
+# Keep the ruff version in sync with the one pinned in .github/workflows/ci.yml.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.1
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+        files: ^(shield|tests)/
+      - id: ruff-format
+        files: ^(shield|tests)/

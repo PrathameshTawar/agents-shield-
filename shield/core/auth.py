@@ -6,8 +6,10 @@ import secrets
 import threading
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional, Tuple
+
 from fastapi import Header, HTTPException, Security, status
 from fastapi.security import APIKeyHeader
+
 from shield.core.config import settings
 from shield.core.models import PendingApproval, ToolCallRequest, UserIdentity
 
@@ -17,6 +19,7 @@ api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 def _compute_args_digest(arguments: Dict[str, Any]) -> str:
     """Computes a deterministic hash of arguments to bind approval tokens to specific parameters."""
     import json
+
     try:
         serialized = json.dumps(arguments, sort_keys=True, default=str)
     except Exception:

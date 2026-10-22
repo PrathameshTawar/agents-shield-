@@ -1,0 +1,5 @@
+# Bulk formatting commits. Enable locally with:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# style: apply ruff format to shield/ and tests/
+ef24a5e78a7dd04374d211a8e68b691f9d474de1

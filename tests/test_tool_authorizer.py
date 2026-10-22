@@ -1,6 +1,5 @@
 """Unit tests for ToolAuthorizer: RBAC, cross-tenant isolation, argument checks, and approval gates."""
 
-import pytest
 from shield.core.models import ActionDecision, ToolCallRequest
 from shield.guards.tool_authorizer import ToolAuthorizer
 

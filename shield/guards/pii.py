@@ -119,20 +119,36 @@ class PIIRedactor:
     }
 
     PHONE_CONTEXT_WORDS = {
-        "phone", "call", "mobile", "cell", "tel", "contact",
-        "reach", "dial", "ph:", "phone:", "whatsapp", "sms",
+        "phone",
+        "call",
+        "mobile",
+        "cell",
+        "tel",
+        "contact",
+        "reach",
+        "dial",
+        "ph:",
+        "phone:",
+        "whatsapp",
+        "sms",
     }
 
     CARD_CONTEXT_WORDS = {
-        "card", "credit", "debit", "visa", "mastercard",
-        "amex", "cvv", "payment", "cc", "charge",
+        "card",
+        "credit",
+        "debit",
+        "visa",
+        "mastercard",
+        "amex",
+        "cvv",
+        "payment",
+        "cc",
+        "charge",
     }
 
     def __init__(self, enabled_detectors: Optional[List[str]] = None):
         if enabled_detectors:
-            self.active_patterns = {
-                k: v for k, v in self.PATTERNS.items() if k in enabled_detectors
-            }
+            self.active_patterns = {k: v for k, v in self.PATTERNS.items() if k in enabled_detectors}
         else:
             self.active_patterns = self.PATTERNS.copy()
 
@@ -201,14 +217,16 @@ class PIIRedactor:
                             # Not a phone number, skip (e.g. Order ID 1234567890)
                             continue
 
-                candidates.append({
-                    "entity_type": name,
-                    "value": val,
-                    "start": start,
-                    "end": end,
-                    "priority": self.PRIORITY.get(name, 0),
-                    "length": end - start,
-                })
+                candidates.append(
+                    {
+                        "entity_type": name,
+                        "value": val,
+                        "start": start,
+                        "end": end,
+                        "priority": self.PRIORITY.get(name, 0),
+                        "length": end - start,
+                    }
+                )
 
         # Overlap Resolution: sort by start asc, priority desc, length desc
         candidates.sort(key=lambda x: (x["start"], -x["priority"], -x["length"]))

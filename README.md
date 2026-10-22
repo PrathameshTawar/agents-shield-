@@ -72,6 +72,12 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+Optional (recommended for contributors): enable the ruff pre-commit hooks so lint and formatting issues are fixed before they reach CI.
+```powershell
+pip install pre-commit
+pre-commit install
+```
+
 ### 2. Run Test Suite
 ```powershell
 python -m pytest -v

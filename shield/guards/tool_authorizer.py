@@ -3,6 +3,7 @@
 import re
 from typing import Any, Dict, List, Optional, Set, Tuple
 from urllib.parse import urlparse
+
 from shield.core.auth import approval_store
 from shield.core.config import settings
 from shield.core.models import ActionDecision, ToolAuthDecision, ToolCallRequest
@@ -138,8 +139,7 @@ class ToolAuthorizer:
                 # Optional allowlist check
                 if self.enforce_allowlist:
                     is_allowed = any(
-                        host == allowed or host.endswith("." + allowed)
-                        for allowed in self.allowed_domains
+                        host == allowed or host.endswith("." + allowed) for allowed in self.allowed_domains
                     )
                     if not is_allowed:
                         return (

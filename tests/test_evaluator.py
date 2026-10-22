@@ -1,6 +1,5 @@
 """Unit tests for RedTeamEvaluator automated adversarial benchmark suite."""
 
-import pytest
 from shield.evaluator.red_team import RedTeamEvaluator, SecurityScorecard
 
 

@@ -1,7 +1,7 @@
 """Global configuration management for AgentShield using pydantic-settings."""
 
-import json
-from typing import Dict, List, Optional, Set
+from typing import Dict, Set
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
