@@ -19,6 +19,7 @@ api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 def _compute_args_digest(arguments: Dict[str, Any]) -> str:
     """Computes a deterministic hash of arguments to bind approval tokens to specific parameters."""
     import json
+
     try:
         serialized = json.dumps(arguments, sort_keys=True, default=str)
     except Exception:

@@ -36,18 +36,12 @@ class OutputValidator:
     def _is_domain_allowed(self, hostname: str) -> bool:
         """Returns True if the hostname matches or is a subdomain of an allowed domain."""
         clean_host = hostname.lower()
-        return any(
-            clean_host == allowed or clean_host.endswith("." + allowed)
-            for allowed in self.allowed_domains
-        )
+        return any(clean_host == allowed or clean_host.endswith("." + allowed) for allowed in self.allowed_domains)
 
     def _is_domain_prohibited(self, hostname: str) -> bool:
         """Returns True if the hostname matches or is a subdomain of a prohibited domain."""
         clean_host = hostname.lower()
-        return any(
-            clean_host == bad or clean_host.endswith("." + bad)
-            for bad in self.prohibited_domains
-        )
+        return any(clean_host == bad or clean_host.endswith("." + bad) for bad in self.prohibited_domains)
 
     def validate(
         self,
@@ -81,8 +75,7 @@ class OutputValidator:
             is_prohibited = self._is_domain_prohibited(host)
             is_unapproved = self.enforce_image_allowlist and not self._is_domain_allowed(host)
             has_sensitive_params = any(
-                p in (parsed.query or "").lower()
-                for p in ["token", "data", "secret", "key", "q", "payload"]
+                p in (parsed.query or "").lower() for p in ["token", "data", "secret", "key", "q", "payload"]
             )
 
             if is_prohibited or is_unapproved or has_sensitive_params:
@@ -135,6 +128,7 @@ class OutputValidator:
                     )
             elif isinstance(expected_schema, dict):
                 import json
+
                 try:
                     parsed_json = json.loads(output_text)
                     # Basic key check

@@ -139,8 +139,7 @@ class ToolAuthorizer:
                 # Optional allowlist check
                 if self.enforce_allowlist:
                     is_allowed = any(
-                        host == allowed or host.endswith("." + allowed)
-                        for allowed in self.allowed_domains
+                        host == allowed or host.endswith("." + allowed) for allowed in self.allowed_domains
                     )
                     if not is_allowed:
                         return (

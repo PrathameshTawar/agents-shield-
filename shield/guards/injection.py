@@ -13,22 +13,22 @@ from shield.core.models import SecurityRiskLevel
 ZERO_WIDTH_CHARS = re.compile(r"[\u200B-\u200D\uFEFF\u2060\u00AD\u200E\u200F\u202A-\u202E]")
 
 # Base64 candidate detector (sequences of valid base64 chars with optional '=' padding)
-BASE64_CANDIDATE = re.compile(
-    r"(?:[A-Za-z0-9+/]{4}){3,}(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})?"
-)
+BASE64_CANDIDATE = re.compile(r"(?:[A-Za-z0-9+/]{4}){3,}(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})?")
 
 # Leetspeak / homoglyph translation table
-LEET_MAP = str.maketrans({
-    "0": "o",
-    "1": "i",
-    "3": "e",
-    "4": "a",
-    "5": "s",
-    "7": "t",
-    "@": "a",
-    "$": "s",
-    "!": "i",
-})
+LEET_MAP = str.maketrans(
+    {
+        "0": "o",
+        "1": "i",
+        "3": "e",
+        "4": "a",
+        "5": "s",
+        "7": "t",
+        "@": "a",
+        "$": "s",
+        "!": "i",
+    }
+)
 
 # Benign device jailbreak queries that should NOT trigger false positives
 DEVICE_JAILBREAK_EXCLUSIONS = re.compile(
@@ -171,7 +171,7 @@ class InjectionGuard:
             ("defanged", leeted_text),
         ]
         for idx, payload in enumerate(decoded_payloads):
-            targets_to_scan.append((f"base64_payload_{idx+1}", self._normalize_text(payload)))
+            targets_to_scan.append((f"base64_payload_{idx + 1}", self._normalize_text(payload)))
 
         for representation, candidate in targets_to_scan:
             for pattern, reason, score in all_checks:
@@ -181,7 +181,9 @@ class InjectionGuard:
                         # Skip false positive match on benign phone/hardware context
                         continue
 
-                    display_reason = reason if representation == "standard" else f"{reason} (detected via {representation})"
+                    display_reason = (
+                        reason if representation == "standard" else f"{reason} (detected via {representation})"
+                    )
                     if display_reason not in matched_reasons:
                         matched_reasons.append(display_reason)
                     max_score = max(max_score, score)
