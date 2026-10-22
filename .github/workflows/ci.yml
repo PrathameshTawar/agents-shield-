@@ -34,6 +34,7 @@ jobs:
       - name: Code Quality & Linting
         run: |
           ruff check shield/ tests/
+          ruff format --check shield/ tests/
 
       - name: Run Pytest Security Suite
         run: |

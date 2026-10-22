@@ -7,3 +7,5 @@ repos:
       - id: ruff-check
         args: [--fix]
         files: ^(shield|tests)/
+      - id: ruff-format
+        files: ^(shield|tests)/
